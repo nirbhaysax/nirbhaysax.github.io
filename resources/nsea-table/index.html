@@ -1,1 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resources / NSEA Table — Nirbhay Saxena</title>
+  <meta name="description" content="Interactive topic-wise mark distribution for NSEA.">
 
+  <style>
+    :root {
+      --bg: #ffffff;
+      --card-bg: #f8fafc;
+      --menu-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --accent: #2563eb;
+      --accent-soft: rgba(37, 99, 235, 0.08);
+      --hover-bg: #f1f5f9;
+      --tag-astro: #7c3aed;
+      --tag-astro-bg: rgba(124, 58, 237, 0.1);
+      --tag-phys: #0284c7;
+      --tag-phys-bg: rgba(2, 132, 199, 0.1);
+      --tag-math: #059669;
+      --tag-math-bg: rgba(5, 150, 105, 0.1);
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0d1117;
+        --card-bg: #161b22;
+        --menu-bg: #1c2128;
+        --text: #e6edf3;
+        --text-muted: #8b949e;
+        --border: #30363d;
+        --accent: #58a6ff;
+        --accent-soft: rgba(88, 166, 255, 0.12);
+        --hover-bg: #21262d;
+        --tag-astro: #a78bfa;
+        --tag-astro-bg: rgba(167, 139, 250, 0.15);
+        --tag-phys: #38bdf8;
+        --tag-phys-bg: rgba(56, 189, 248, 0.15);
+        --tag-math: #34d399;
+        --tag-math-bg: rgba(52, 211, 153, 0.15);
+        --shadow: 0 12px 30px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 2.5rem 1.25rem;
+    }
+    .container { max-width: 980px; margin: 0 auto; }
+
+    /* Top Back Navigation */
+    .top-nav {
+      margin-bottom: 2rem;
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.15s;
+    }
+    .back-link:hover { color: var(--accent); }
+
+    .section-title { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 0.35rem; }
+    .section-desc { color: var(--text-muted); font-size: 0.925rem; margin-bottom: 1.25rem; }
+
+    .summary-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1.25rem;
+      font-size: 0.85rem;
+    }
+    .stat-pill { display: flex; align-items: center; gap: 0.4rem; }
+    .stat-label { color: var(--text-muted); }
+    .stat-val { font-weight: 600; }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+    .search-box { flex: 1 1 240px; position: relative; }
+    .search-box input {
+      width: 100%; height: 38px; background: var(--card-bg); border: 1px solid var(--border);
+      color: var(--text); padding: 0 0.85rem 0 2.25rem; border-radius: 8px; font-size: 0.875rem; outline: none;
+    }
+    .search-box input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
+    .search-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+
+    .dropdown-container { position: relative; }
+    .menu-btn {
+      height: 38px; background: var(--card-bg); border: 1px solid var(--border);
+      color: var(--text); padding: 0 0.85rem; border-radius: 8px; font-size: 0.85rem;
+      font-weight: 500; display: inline-flex; align-items: center; gap: 0.5rem; cursor: pointer; white-space: nowrap;
+    }
+    .menu-btn:hover { background: var(--hover-bg); border-color: var(--accent); }
+    .menu-btn .chevron { font-size: 0.65rem; transition: transform 0.2s; color: var(--text-muted); }
+    .dropdown-container.open .menu-btn .chevron { transform: rotate(180deg); }
+
+    .dropdown-menu {
+      display: none; position: absolute; top: calc(100% + 6px); left: 0; min-width: 250px;
+      background: var(--menu-bg); border: 1px solid var(--border); border-radius: 8px;
+      box-shadow: var(--shadow); z-index: 100; padding: 0.35rem 0;
+    }
+    .dropdown-container.open .dropdown-menu { display: block; }
+    .menu-group-title { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; padding: 0.5rem 1rem 0.25rem; }
+    .menu-divider { height: 1px; background: var(--border); margin: 0.35rem 0; }
+    .menu-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.5rem 1rem; font-size: 0.85rem; color: var(--text); cursor: pointer;
+    }
+    .menu-item:hover { background: var(--hover-bg); }
+    .menu-item.active { color: var(--accent); font-weight: 600; }
+    .menu-item .check { font-size: 0.85rem; opacity: 0; }
+    .menu-item.active .check { opacity: 1; }
+
+    .table-wrapper { border: 1px solid var(--border); border-radius: 8px; overflow-x: auto; background: var(--bg); }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem; min-width: 680px; }
+    th { background: var(--card-bg); padding: 0.75rem 0.85rem; font-weight: 600; color: var(--text-muted); border-bottom: 1px solid var(--border); white-space: nowrap; }
+    td { padding: 0.65rem 0.85rem; border-bottom: 1px solid var(--border); white-space: nowrap; font-variant-numeric: tabular-nums; }
+    tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background-color: var(--hover-bg); }
+    .col-num { text-align: right; }
+    .col-topic { font-weight: 500; }
+
+    .badge { display: inline-block; font-size: 0.725rem; font-weight: 600; padding: 0.15rem 0.5rem; border-radius: 4px; }
+    .badge-astro { color: var(--tag-astro); background: var(--tag-astro-bg); }
+    .badge-phys  { color: var(--tag-phys);  background: var(--tag-phys-bg); }
+    .badge-math  { color: var(--tag-math);  background: var(--tag-math-bg); }
+
+    .weight-cell { position: relative; text-align: right; padding-right: 1rem; }
+    .weight-bg-bar { position: absolute; right: 0; top: 15%; bottom: 15%; background: var(--accent-soft); border-radius: 3px; z-index: 1; pointer-events: none; }
+    .weight-text { position: relative; z-index: 2; font-weight: 600; }
+
+    .table-footer { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0.25rem; font-size: 0.85rem; color: var(--text-muted); }
+    footer { margin-top: 4rem; text-align: center; font-size: 0.85rem; color: var(--text-muted); }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- Breadcrumb / Back button -->
+    <nav class="top-nav">
+      <a href="/" class="back-link">&larr; Back to Home</a>
+    </nav>
+
+    <!-- Content -->
+    <main>
+      <h1 class="section-title">NSEA Mark Distribution Analysis (2022–2025)</h1>
+      <p class="section-desc">
+        Comprehensive breakdown of 67 topics across 4 years (864 total marks). Filter by subject or sort using the menus below.
+      </p>
+
+      <div class="summary-bar">
+        <div class="stat-pill"><span class="stat-label">Total Analyzed:</span> <span class="stat-val">864 Marks</span></div>
+        <div class="stat-pill">&bull;</div>
+        <div class="stat-pill"><span class="badge badge-astro">Astronomy</span> <span class="stat-val">243m (28.1%)</span></div>
+        <div class="stat-pill">&bull;</div>
+        <div class="stat-pill"><span class="badge badge-phys">Physics</span> <span class="stat-val">309m (35.8%)</span></div>
+        <div class="stat-pill">&bull;</div>
+        <div class="stat-pill"><span class="badge badge-math">Maths</span> <span class="stat-val">312m (36.1%)</span></div>
+      </div>
+
+      <!-- Controls Toolbar -->
+      <div class="toolbar">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="searchInput" placeholder="Search topics (e.g. Stars, Optics, Vectors)...">
+        </div>
+
+        <!-- Subject Dropdown -->
+        <div class="dropdown-container" id="subjectFilterContainer">
+          <button class="menu-btn" id="subjectBtn">
+            <span>🏷️ Subject: <strong id="currentSubjectText">All (67)</strong></span>
+            <span class="chevron">▼</span>
+          </button>
+          <div class="dropdown-menu" id="subjectMenu">
+            <div class="menu-item active" data-subject="All"><span>All Subjects (67)</span><span class="check">✓</span></div>
+            <div class="menu-item" data-subject="Astronomy"><span>Astronomy (20)</span><span class="check">✓</span></div>
+            <div class="menu-item" data-subject="Physics"><span>Physics (24)</span><span class="check">✓</span></div>
+            <div class="menu-item" data-subject="Mathematics"><span>Mathematics (23)</span><span class="check">✓</span></div>
+          </div>
+        </div>
+
+        <!-- Sort Dropdown -->
+        <div class="dropdown-container" id="sortFilterContainer">
+          <button class="menu-btn" id="sortBtn">
+            <span>⇅ Sort: <strong id="currentSortText">% Weight (High → Low)</strong></span>
+            <span class="chevron">▼</span>
+          </button>
+          <div class="dropdown-menu" id="sortMenu">
+            <div class="menu-group-title">Weight & Total Marks</div>
+            <div class="menu-item active" data-sort="weight-desc"><span>% Weightage: High to Low</span><span class="check">✓</span></div>
+            <div class="menu-item" data-sort="weight-asc"><span>% Weightage: Low to High</span><span class="check">✓</span></div>
+            <div class="menu-item" data-sort="total-desc"><span>Total Marks: High to Low</span><span class="check">✓</span></div>
+            
+            <div class="menu-divider"></div>
+            <div class="menu-group-title">By Year</div>
+            <div class="menu-item" data-sort="2025-desc"><span>2025 Marks: High to Low</span><span class="check">✓</span></div>
+            <div class="menu-item" data-sort="2024-desc"><span>2024 Marks: High to Low</span><span class="check">✓</span></div>
+
+            <div class="menu-divider"></div>
+            <div class="menu-group-title">Topic Alphabetical</div>
+            <div class="menu-item" data-sort="name-asc"><span>Topic: A → Z</span><span class="check">✓</span></div>
+            <div class="menu-item" data-sort="name-desc"><span>Topic: Z → A</span><span class="check">✓</span></div>
+
+            <div class="menu-divider"></div>
+            <div class="menu-group-title">Group by Subject</div>
+            <div class="menu-item" data-sort="group-astro"><span>Astronomy → Maths → Physics</span><span class="check">✓</span></div>
+            <div class="menu-item" data-sort="group-phys"><span>Physics → Maths → Astronomy</span><span class="check">✓</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table Wrapper -->
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 120px;">Subject</th>
+              <th>Topic Name</th>
+              <th class="col-num">2022</th>
+              <th class="col-num">2023</th>
+              <th class="col-num">2024</th>
+              <th class="col-num">2025</th>
+              <th class="col-num">Total</th>
+              <th class="col-num" style="width: 130px;">% of 864</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+
+      <div class="table-footer">
+        <span id="filteredCount">Showing 67 topics</span>
+        <span id="filteredMarks">Filtered Total: 864 marks (100%)</span>
+      </div>
+    </main>
+
+    <footer>
+      &copy; <span id="year"></span> &bull; <a href="index.html" style="color: inherit;">Home</a>
+    </footer>
+
+  </div>
+
+  <script>
+    const RAW_DATA = [
+      { topic: "Stars", y2022: 18, y2023: 24, y2024: 27, y2025: 15, total: 84, pct: 9.72, subject: "Astronomy" },
+      { topic: "Continuity and Differentiability", y2022: 3, y2023: 9, y2024: 9, y2025: 3, total: 24, pct: 2.78, subject: "Mathematics" },
+      { topic: "Telescopes", y2022: 3, y2023: 12, y2024: 3, y2025: 6, total: 24, pct: 2.78, subject: "Astronomy" },
+      { topic: "Sequence and Series", y2022: 3, y2023: 0, y2024: 0, y2025: 18, total: 21, pct: 2.43, subject: "Mathematics" },
+      { topic: "Diurnal motion of Earth", y2022: 0, y2023: 9, y2024: 3, y2025: 9, total: 21, pct: 2.43, subject: "Astronomy" },
+      { topic: "Celestial Mechanics & Orbital Dynamics", y2022: 9, y2023: 3, y2024: 9, y2025: 0, total: 21, pct: 2.43, subject: "Astronomy" },
+      { topic: "Determinants", y2022: 3, y2023: 3, y2024: 6, y2025: 9, total: 21, pct: 2.43, subject: "Mathematics" },
+      { topic: "Probability", y2022: 3, y2023: 6, y2024: 3, y2025: 9, total: 21, pct: 2.43, subject: "Mathematics" },
+      { topic: "Plane & Spherical Geometry", y2022: 12, y2023: 6, y2024: 3, y2025: 0, total: 21, pct: 2.43, subject: "Mathematics" },
+      { topic: "Planets and their moons", y2022: 6, y2023: 9, y2024: 6, y2025: 0, total: 21, pct: 2.43, subject: "Astronomy" },
+      { topic: "Ray Optics and Optical Instruments", y2022: 6, y2023: 3, y2024: 6, y2025: 3, total: 18, pct: 2.08, subject: "Physics" },
+      { topic: "Number Theory & Inequalities", y2022: 12, y2023: 3, y2024: 3, y2025: 0, total: 18, pct: 2.08, subject: "Mathematics" },
+      { topic: "Electrostatics", y2022: 3, y2023: 3, y2024: 6, y2025: 6, total: 18, pct: 2.08, subject: "Physics" },
+      { topic: "Current Electricity", y2022: 3, y2023: 6, y2024: 3, y2025: 6, total: 18, pct: 2.08, subject: "Physics" },
+      { topic: "Trigonometric Functions", y2022: 0, y2023: 3, y2024: 6, y2025: 9, total: 18, pct: 2.08, subject: "Mathematics" },
+      { topic: "Complex Numbers and Quadratic Equations", y2022: 0, y2023: 3, y2024: 3, y2025: 12, total: 18, pct: 2.08, subject: "Mathematics" },
+      { topic: "Paths of Solar System objects in the night sky", y2022: 6, y2023: 0, y2024: 0, y2025: 9, total: 15, pct: 1.74, subject: "Astronomy" },
+      { topic: "Celestial Coordinate Systems & Sidereal Time", y2022: 6, y2023: 3, y2024: 6, y2025: 0, total: 15, pct: 1.74, subject: "Astronomy" },
+      { topic: "Atoms and Nuclei", y2022: 3, y2023: 3, y2024: 6, y2025: 3, total: 15, pct: 1.74, subject: "Physics" },
+      { topic: "Applications of Derivatives", y2022: 3, y2023: 3, y2024: 6, y2025: 3, total: 15, pct: 1.74, subject: "Mathematics" },
+      { topic: "Permutations and Combinations", y2022: 9, y2023: 0, y2024: 6, y2025: 0, total: 15, pct: 1.74, subject: "Mathematics" },
+      { topic: "Motion in a Plane", y2022: 3, y2023: 3, y2024: 0, y2025: 9, total: 15, pct: 1.74, subject: "Physics" },
+      { topic: "Magnetic Effects of Current and Magnetism", y2022: 3, y2023: 3, y2024: 3, y2025: 6, total: 15, pct: 1.74, subject: "Physics" },
+      { topic: "Solar System", y2022: 3, y2023: 9, y2024: 0, y2025: 3, total: 15, pct: 1.74, subject: "Astronomy" },
+      { topic: "Sun", y2022: 6, y2023: 9, y2024: 0, y2025: 0, total: 15, pct: 1.74, subject: "Astronomy" },
+      { topic: "Galaxies", y2022: 0, y2023: 9, y2024: 6, y2025: 0, total: 15, pct: 1.74, subject: "Astronomy" },
+      { topic: "Thermal Properties of Matter", y2022: 3, y2023: 3, y2024: 3, y2025: 6, total: 15, pct: 1.74, subject: "Physics" },
+      { topic: "Rising and setting of stars", y2022: 0, y2023: 0, y2024: 0, y2025: 15, total: 15, pct: 1.74, subject: "Astronomy" },
+      { topic: "Conic Sections", y2022: 0, y2023: 0, y2024: 12, y2025: 3, total: 15, pct: 1.74, subject: "Mathematics" },
+      { topic: "Vectors", y2022: 6, y2023: 6, y2024: 0, y2025: 0, total: 12, pct: 1.39, subject: "Mathematics" },
+      { topic: "Tides", y2022: 6, y2023: 0, y2024: 6, y2025: 0, total: 12, pct: 1.39, subject: "Astronomy" },
+      { topic: "Linear Programming", y2022: 0, y2023: 6, y2024: 6, y2025: 0, total: 12, pct: 1.39, subject: "Mathematics" },
+      { topic: "Integrals", y2022: 0, y2023: 3, y2024: 3, y2025: 6, total: 12, pct: 1.39, subject: "Mathematics" },
+      { topic: "Units and Measurements", y2022: 3, y2023: 3, y2024: 3, y2025: 3, total: 12, pct: 1.39, subject: "Physics" },
+      { topic: "Gravitation", y2022: 3, y2023: 6, y2024: 3, y2025: 0, total: 12, pct: 1.39, subject: "Physics" },
+      { topic: "Alternating Current", y2022: 0, y2023: 3, y2024: 3, y2025: 6, total: 12, pct: 1.39, subject: "Physics" },
+      { topic: "System of Particles and Rotational Motion", y2022: 3, y2023: 3, y2024: 3, y2025: 3, total: 12, pct: 1.39, subject: "Physics" },
+      { topic: "Thermodynamics", y2022: 3, y2023: 3, y2024: 3, y2025: 3, total: 12, pct: 1.39, subject: "Physics" },
+      { topic: "Logarithms & Exponential Series", y2022: 6, y2023: 3, y2024: 0, y2025: 0, total: 9, pct: 1.04, subject: "Mathematics" },
+      { topic: "Photometry, Magnitudes & Distance Modulus", y2022: 3, y2023: 0, y2024: 6, y2025: 0, total: 9, pct: 1.04, subject: "Astronomy" },
+      { topic: "Wave Optics", y2022: 3, y2023: 0, y2024: 6, y2025: 0, total: 9, pct: 1.04, subject: "Physics" },
+      { topic: "Relations and Functions", y2022: 3, y2023: 3, y2024: 3, y2025: 0, total: 9, pct: 1.04, subject: "Mathematics" },
+      { topic: "Comets", y2022: 3, y2023: 0, y2024: 0, y2025: 6, total: 9, pct: 1.04, subject: "Astronomy" },
+      { topic: "Oscillations and Waves", y2022: 3, y2023: 3, y2024: 0, y2025: 3, total: 9, pct: 1.04, subject: "Physics" },
+      { topic: "Differential Equations", y2022: 0, y2023: 9, y2024: 0, y2025: 0, total: 9, pct: 1.04, subject: "Mathematics" },
+      { topic: "Seasons", y2022: 0, y2023: 0, y2024: 6, y2025: 3, total: 9, pct: 1.04, subject: "Astronomy" },
+      { topic: "Mechanical Properties of Fluids", y2022: 3, y2023: 3, y2024: 3, y2025: 0, total: 9, pct: 1.04, subject: "Physics" },
+      { topic: "Laws of Motion", y2022: 6, y2023: 3, y2024: 0, y2025: 0, total: 9, pct: 1.04, subject: "Physics" },
+      { topic: "Common constellations", y2022: 0, y2023: 0, y2024: 0, y2025: 6, total: 6, pct: 0.69, subject: "Astronomy" },
+      { topic: "Binomial Theorem", y2022: 6, y2023: 0, y2024: 0, y2025: 0, total: 6, pct: 0.69, subject: "Mathematics" },
+      { topic: "Milky Way", y2022: 0, y2023: 0, y2024: 0, y2025: 6, total: 6, pct: 0.69, subject: "Astronomy" },
+      { topic: "Cosmology, Redshift & Hubble's Law", y2022: 3, y2023: 0, y2024: 3, y2025: 0, total: 6, pct: 0.69, subject: "Astronomy" },
+      { topic: "Electronic Devices", y2022: 0, y2023: 3, y2024: 0, y2025: 3, total: 6, pct: 0.69, subject: "Physics" },
+      { topic: "Applications of Integrals", y2022: 0, y2023: 3, y2024: 3, y2025: 0, total: 6, pct: 0.69, subject: "Mathematics" },
+      { topic: "Behaviour of Perfect Gases and Kinetic Theory of Gases", y2022: 0, y2023: 3, y2024: 3, y2025: 0, total: 6, pct: 0.69, subject: "Physics" },
+      { topic: "Sets, Statistics & Mathematical Logic", y2022: 6, y2023: 0, y2024: 0, y2025: 0, total: 6, pct: 0.69, subject: "Mathematics" },
+      { topic: "Dual Nature of Radiation and Matter", y2022: 0, y2023: 0, y2024: 6, y2025: 0, total: 6, pct: 0.69, subject: "Physics" },
+      { topic: "Asteroids", y2022: 3, y2023: 0, y2024: 0, y2025: 0, total: 3, pct: 0.35, subject: "Astronomy" },
+      { topic: "Matrices", y2022: 3, y2023: 0, y2024: 0, y2025: 0, total: 3, pct: 0.35, subject: "Mathematics" },
+      { topic: "Limits and Derivatives", y2022: 0, y2023: 0, y2024: 0, y2025: 3, total: 3, pct: 0.35, subject: "Mathematics" },
+      { topic: "Inverse Trigonometric Functions", y2022: 3, y2023: 0, y2024: 0, y2025: 0, total: 3, pct: 0.35, subject: "Mathematics" },
+      { topic: "Motion in a Straight Line", y2022: 3, y2023: 0, y2024: 0, y2025: 0, total: 3, pct: 0.35, subject: "Physics" },
+      { topic: "Work, Energy and Power", y2022: 0, y2023: 3, y2024: 0, y2025: 0, total: 3, pct: 0.35, subject: "Physics" },
+      { topic: "Mechanical Properties of Solids", y2022: 0, y2023: 0, y2024: 0, y2025: 3, total: 3, pct: 0.35, subject: "Physics" },
+      { topic: "Electromagnetic Induction", y2022: 3, y2023: 0, y2024: 0, y2025: 0, total: 3, pct: 0.35, subject: "Physics" },
+      { topic: "Electromagnetic Waves", y2022: 0, y2023: 0, y2024: 3, y2025: 0, total: 3, pct: 0.35, subject: "Physics" },
+      { topic: "Phases of the Moon", y2022: 3, y2023: 0, y2024: 0, y2025: 0, total: 3, pct: 0.35, subject: "Astronomy" }
+    ];
+
+    let currentSubject = "All";
+    let currentSort = "weight-desc";
+    let searchQuery = "";
+
+    // DOM Elements
+    const tableBody = document.getElementById("tableBody");
+    const searchInput = document.getElementById("searchInput");
+    const filteredCount = document.getElementById("filteredCount");
+    const filteredMarks = document.getElementById("filteredMarks");
+
+    // Dropdown Containers & Buttons
+    const subjectContainer = document.getElementById("subjectFilterContainer");
+    const sortContainer = document.getElementById("sortFilterContainer");
+    const subjectBtn = document.getElementById("subjectBtn");
+    const sortBtn = document.getElementById("sortBtn");
+    const currentSubjectText = document.getElementById("currentSubjectText");
+    const currentSortText = document.getElementById("currentSortText");
+
+    // Badge styling helper
+    function getBadge(subject) {
+      if (subject === "Astronomy") return `<span class="badge badge-astro">Astronomy</span>`;
+      if (subject === "Physics") return `<span class="badge badge-phys">Physics</span>`;
+      return `<span class="badge badge-math">Maths</span>`;
+    }
+
+    // Render Table
+    function render() {
+      // 1. Filter
+      let data = RAW_DATA.filter(item => {
+        const matchesSubject = (currentSubject === "All") || (item.subject === currentSubject);
+        const matchesSearch = item.topic.toLowerCase().includes(searchQuery.toLowerCase());
+        return matchesSubject && matchesSearch;
+      });
+
+      // 2. Sort
+      data.sort((a, b) => {
+        switch (currentSort) {
+          case "weight-desc": return b.pct - a.pct;
+          case "weight-asc":  return a.pct - b.pct;
+          case "total-desc":   return b.total - a.total;
+          case "2025-desc":    return b.y2025 - a.y2025;
+          case "2024-desc":    return b.y2024 - a.y2024;
+          case "name-asc":     return a.topic.localeCompare(b.topic);
+          case "name-desc":    return b.topic.localeCompare(a.topic);
+          case "group-astro": {
+            const order = { "Astronomy": 1, "Mathematics": 2, "Physics": 3 };
+            if (order[a.subject] !== order[b.subject]) return order[a.subject] - order[b.subject];
+            return b.pct - a.pct;
+          }
+          case "group-phys": {
+            const order = { "Physics": 1, "Mathematics": 2, "Astronomy": 3 };
+            if (order[a.subject] !== order[b.subject]) return order[a.subject] - order[b.subject];
+            return b.pct - a.pct;
+          }
+          default: return 0;
+        }
+      });
+
+      // 3. Render Rows
+      const maxPct = 9.72;
+      tableBody.innerHTML = data.map(item => {
+        const barWidth = Math.min(100, (item.pct / maxPct) * 100);
+        return `
+          <tr>
+            <td>${getBadge(item.subject)}</td>
+            <td class="col-topic">${item.topic}</td>
+            <td class="col-num">${item.y2022}</td>
+            <td class="col-num">${item.y2023}</td>
+            <td class="col-num">${item.y2024}</td>
+            <td class="col-num">${item.y2025}</td>
+            <td class="col-num" style="font-weight: 600;">${item.total}</td>
+            <td class="weight-cell">
+              <div class="weight-bg-bar" style="width: ${barWidth}%;"></div>
+              <span class="weight-text">${item.pct.toFixed(2)}%</span>
+            </td>
+          </tr>
+        `;
+      }).join("");
+
+      // 4. Update Stats
+      const totalMarksFiltered = data.reduce((acc, curr) => acc + curr.total, 0);
+      const totalPctFiltered = ((totalMarksFiltered / 864) * 100).toFixed(1);
+
+      filteredCount.textContent = `Showing ${data.length} of ${RAW_DATA.length} topics`;
+      filteredMarks.textContent = `Filtered Total: ${totalMarksFiltered} marks (${totalPctFiltered}%)`;
+    }
+
+    // Dropdown Toggles & Click Outside
+    subjectBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      sortContainer.classList.remove("open");
+      subjectContainer.classList.toggle("open");
+    });
+
+    sortBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      subjectContainer.classList.remove("open");
+      sortContainer.classList.toggle("open");
+    });
+
+    document.addEventListener("click", () => {
+      subjectContainer.classList.remove("open");
+      sortContainer.classList.remove("open");
+    });
+
+    // Subject Filter Selection
+    document.querySelectorAll("#subjectMenu .menu-item").forEach(item => {
+      item.addEventListener("click", () => {
+        document.querySelectorAll("#subjectMenu .menu-item").forEach(el => el.classList.remove("active"));
+        item.classList.add("active");
+        currentSubject = item.getAttribute("data-subject");
+        currentSubjectText.textContent = item.querySelector("span").textContent.split(" ")[0];
+        subjectContainer.classList.remove("open");
+        render();
+      });
+    });
+
+    // Sort Option Selection
+    document.querySelectorAll("#sortMenu .menu-item").forEach(item => {
+      item.addEventListener("click", () => {
+        document.querySelectorAll("#sortMenu .menu-item").forEach(el => el.classList.remove("active"));
+        item.classList.add("active");
+        currentSort = item.getAttribute("data-sort");
+        currentSortText.textContent = item.querySelector("span").textContent;
+        sortContainer.classList.remove("open");
+        render();
+      });
+    });
+
+    // Search Input Event
+    searchInput.addEventListener("input", (e) => {
+      searchQuery = e.target.value.trim();
+      render();
+    });
+
+    // Set Copyright Year & Initial Render
+    document.getElementById("year").textContent = new Date().getFullYear();
+    render();
+  </script>
+</body>
+</html>
