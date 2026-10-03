@@ -3,8 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Resources / NSEA Table — Nirbhay Saxena</title>
-  <meta name="description" content="Interactive topic-wise mark distribution for NSEA.">
+  <title>Resources / NSEA Analysis — Nirbhay Saxena</title>
+  <meta name="description" content="Interactive mark distribution table and trend graph for NSEA (2022–2025).">
+
+  <!-- Chart.js via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
     :root {
@@ -57,14 +60,14 @@
     }
     .container { max-width: 980px; margin: 0 auto; }
 
-    /* Top Back Navigation */
+    /* Top Nav & View Switcher */
     .top-nav {
-      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.75rem;
     }
     .back-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
       color: var(--text-muted);
       text-decoration: none;
       font-size: 0.9rem;
@@ -72,6 +75,36 @@
       transition: color 0.15s;
     }
     .back-link:hover { color: var(--accent); }
+
+    /* Segmented View Switcher Button */
+    .view-switcher {
+      display: inline-flex;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 3px;
+      gap: 3px;
+    }
+    .view-btn {
+      padding: 0.35rem 0.85rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.15s;
+    }
+    .view-btn.active {
+      background: var(--bg);
+      color: var(--text);
+      font-weight: 600;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
 
     .section-title { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 0.35rem; }
     .section-desc { color: var(--text-muted); font-size: 0.925rem; margin-bottom: 1.25rem; }
@@ -91,6 +124,11 @@
     .stat-label { color: var(--text-muted); }
     .stat-val { font-weight: 600; }
 
+    /* View Sections */
+    .view-content { display: none; }
+    .view-content.active { display: block; }
+
+    /* ─── TABLE VIEW STYLES ─── */
     .toolbar {
       display: flex;
       flex-wrap: wrap;
@@ -150,8 +188,61 @@
     .weight-cell { position: relative; text-align: right; padding-right: 1rem; }
     .weight-bg-bar { position: absolute; right: 0; top: 15%; bottom: 15%; background: var(--accent-soft); border-radius: 3px; z-index: 1; pointer-events: none; }
     .weight-text { position: relative; z-index: 2; font-weight: 600; }
-
     .table-footer { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0.25rem; font-size: 0.85rem; color: var(--text-muted); }
+
+    /* ─── GRAPH VIEW STYLES ─── */
+    .chart-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    .chart-container { position: relative; height: 380px; width: 100%; }
+
+    .controls-panel {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .panel-header {
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem;
+    }
+    .panel-title { font-size: 0.95rem; font-weight: 600; }
+    .preset-group { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .preset-btn {
+      background: var(--bg); border: 1px solid var(--border); color: var(--text);
+      font-size: 0.775rem; font-weight: 500; padding: 0.3rem 0.65rem; border-radius: 6px;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .preset-btn:hover { background: var(--hover-bg); border-color: var(--accent); color: var(--accent); }
+
+    .filter-bar { display: flex; gap: 0.6rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .search-input {
+      flex: 1 1 200px; height: 36px; background: var(--bg); border: 1px solid var(--border);
+      color: var(--text); padding: 0 0.75rem; border-radius: 6px; font-size: 0.85rem; outline: none;
+    }
+    .search-input:focus { border-color: var(--accent); }
+    .tab-btn {
+      height: 36px; background: var(--bg); border: 1px solid var(--border);
+      color: var(--text-muted); font-size: 0.8rem; font-weight: 500; padding: 0 0.75rem;
+      border-radius: 6px; cursor: pointer;
+    }
+    .tab-btn.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 600; }
+
+    .pill-grid { display: flex; flex-wrap: wrap; gap: 0.4rem; max-height: 220px; overflow-y: auto; padding-right: 0.25rem; }
+    .topic-pill {
+      font-size: 0.8rem; padding: 0.3rem 0.65rem; border-radius: 6px;
+      border: 1px solid var(--border); background: var(--bg); color: var(--text-muted);
+      cursor: pointer; user-select: none; transition: all 0.15s;
+    }
+    .topic-pill:hover { border-color: var(--text-muted); color: var(--text); }
+    .topic-pill.active { background: var(--accent); border-color: var(--accent); color: #ffffff; font-weight: 500; }
+    .selection-count { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.75rem; text-align: right; }
+
     footer { margin-top: 4rem; text-align: center; font-size: 0.85rem; color: var(--text-muted); }
   </style>
 </head>
@@ -159,20 +250,30 @@
 
   <div class="container">
     
-    <!-- Breadcrumb / Back button -->
+    <!-- Top Navigation with Segmented Toggle -->
     <nav class="top-nav">
       <a href="/" class="back-link">&larr; Back to Home</a>
+      
+      <!-- View Switcher -->
+      <div class="view-switcher">
+        <button class="view-btn active" id="btnTableView" onclick="switchView('table')">
+          📄 Table View
+        </button>
+        <button class="view-btn" id="btnGraphView" onclick="switchView('graph')">
+          📈 Graph View
+        </button>
+      </div>
     </nav>
 
-    <!-- Content -->
-    <main>
+    <!-- Header -->
+    <header>
       <h1 class="section-title">NSEA Mark Distribution Analysis (2022–2025)</h1>
       <p class="section-desc">
-        Comprehensive breakdown of 67 topics across 4 years (864 total marks). Filter by subject or sort using the menus below.
+        Comprehensive breakdown of 67 topics across 4 years (864 total marks). Switch between the table and trend graph above.
       </p>
 
       <div class="summary-bar">
-        <div class="stat-pill"><span class="stat-label">Total Analyzed:</span> <span class="stat-val">864 Marks</span></div>
+        <div class="stat-pill"><span class="stat-label">Total Evaluated:</span> <span class="stat-val">864 Marks</span></div>
         <div class="stat-pill">&bull;</div>
         <div class="stat-pill"><span class="badge badge-astro">Astronomy</span> <span class="stat-val">243m (28.1%)</span></div>
         <div class="stat-pill">&bull;</div>
@@ -180,15 +281,17 @@
         <div class="stat-pill">&bull;</div>
         <div class="stat-pill"><span class="badge badge-math">Maths</span> <span class="stat-val">312m (36.1%)</span></div>
       </div>
+    </header>
 
-      <!-- Controls Toolbar -->
+    <!-- ================= VIEW 1: TABLE ================= -->
+    <section id="tableView" class="view-content active">
       <div class="toolbar">
         <div class="search-box">
           <span class="search-icon">🔍</span>
-          <input type="text" id="searchInput" placeholder="Search topics (e.g. Stars, Optics, Vectors)...">
+          <input type="text" id="tableSearchInput" placeholder="Search topics (e.g. Stars, Optics, Vectors)...">
         </div>
 
-        <!-- Subject Dropdown -->
+        <!-- Subject Filter Dropdown -->
         <div class="dropdown-container" id="subjectFilterContainer">
           <button class="menu-btn" id="subjectBtn">
             <span>🏷️ Subject: <strong id="currentSubjectText">All (67)</strong></span>
@@ -202,7 +305,7 @@
           </div>
         </div>
 
-        <!-- Sort Dropdown -->
+        <!-- Sort Filter Dropdown -->
         <div class="dropdown-container" id="sortFilterContainer">
           <button class="menu-btn" id="sortBtn">
             <span>⇅ Sort: <strong id="currentSortText">% Weight (High → Low)</strong></span>
@@ -232,7 +335,6 @@
         </div>
       </div>
 
-      <!-- Table Wrapper -->
       <div class="table-wrapper">
         <table>
           <thead>
@@ -255,15 +357,52 @@
         <span id="filteredCount">Showing 67 topics</span>
         <span id="filteredMarks">Filtered Total: 864 marks (100%)</span>
       </div>
-    </main>
+    </section>
+
+    <!-- ================= VIEW 2: GRAPH ================= -->
+    <section id="graphView" class="view-content">
+      <div class="chart-card">
+        <div class="chart-container">
+          <canvas id="trendChart"></canvas>
+        </div>
+      </div>
+
+      <div class="controls-panel">
+        <div class="panel-header">
+          <span class="panel-title">Toggle Topics to Compare</span>
+          <div class="preset-group">
+            <button class="preset-btn" onclick="applyPreset('top5')">Top 5 Overall</button>
+            <button class="preset-btn" onclick="applyPreset('astro')">Top Astronomy</button>
+            <button class="preset-btn" onclick="applyPreset('phys')">Top Physics</button>
+            <button class="preset-btn" onclick="applyPreset('math')">Top Maths</button>
+            <button class="preset-btn" onclick="applyPreset('clear')">Clear All</button>
+          </div>
+        </div>
+
+        <div class="filter-bar">
+          <input type="text" id="graphSearchInput" class="search-input" placeholder="Search from 67 topics...">
+          <button class="tab-btn active" data-subject="All" onclick="setGraphSubjectFilter('All')">All</button>
+          <button class="tab-btn" data-subject="Astronomy" onclick="setGraphSubjectFilter('Astronomy')">Astronomy</button>
+          <button class="tab-btn" data-subject="Physics" onclick="setGraphSubjectFilter('Physics')">Physics</button>
+          <button class="tab-btn" data-subject="Mathematics" onclick="setGraphSubjectFilter('Mathematics')">Maths</button>
+        </div>
+
+        <div class="pill-grid" id="pillGrid"></div>
+
+        <div class="selection-count" id="selectionCount">
+          Showing 4 active lines
+        </div>
+      </div>
+    </section>
 
     <footer>
-      &copy; <span id="year"></span> &bull; <a href="index.html" style="color: inherit;">Home</a>
+      &copy; <span id="year"></span> Nirbhay Saxena &bull; <a href="/" style="color: inherit;">Home</a>
     </footer>
 
   </div>
 
   <script>
+    // 67 Topics Dataset
     const RAW_DATA = [
       { topic: "Stars", y2022: 18, y2023: 24, y2024: 27, y2025: 15, total: 84, pct: 9.72, subject: "Astronomy" },
       { topic: "Continuity and Differentiability", y2022: 3, y2023: 9, y2024: 9, y2025: 3, total: 24, pct: 2.78, subject: "Mathematics" },
@@ -334,43 +473,59 @@
       { topic: "Phases of the Moon", y2022: 3, y2023: 0, y2024: 0, y2025: 0, total: 3, pct: 0.35, subject: "Astronomy" }
     ];
 
-    let currentSubject = "All";
-    let currentSort = "weight-desc";
-    let searchQuery = "";
+    // Colors for Graph Lines
+    const COLORS = [
+      "#2563eb", "#ec4899", "#8b5cf6", "#f59e0b", "#10b981", 
+      "#06b6d4", "#ef4444", "#84cc16", "#6366f1", "#14b8a6",
+      "#d946ef", "#f97316"
+    ];
 
-    // DOM Elements
-    const tableBody = document.getElementById("tableBody");
-    const searchInput = document.getElementById("searchInput");
-    const filteredCount = document.getElementById("filteredCount");
-    const filteredMarks = document.getElementById("filteredMarks");
+    // ─── STATE ───
+    let currentView = "table";
+    let tableSubject = "All";
+    let tableSort = "weight-desc";
+    let tableSearch = "";
 
-    // Dropdown Containers & Buttons
-    const subjectContainer = document.getElementById("subjectFilterContainer");
-    const sortContainer = document.getElementById("sortFilterContainer");
-    const subjectBtn = document.getElementById("subjectBtn");
-    const sortBtn = document.getElementById("sortBtn");
-    const currentSubjectText = document.getElementById("currentSubjectText");
-    const currentSortText = document.getElementById("currentSortText");
+    let selectedGraphTopics = new Set(["Stars", "Continuity and Differentiability", "Telescopes", "Sequence and Series"]);
+    let graphSubject = "All";
+    let graphSearch = "";
+    let chartInstance = null;
 
-    // Badge styling helper
+    // ─── VIEW SWITCHING ───
+    function switchView(view) {
+      currentView = view;
+      document.getElementById("btnTableView").classList.toggle("active", view === "table");
+      document.getElementById("btnGraphView").classList.toggle("active", view === "graph");
+      document.getElementById("tableView").classList.toggle("active", view === "table");
+      document.getElementById("graphView").classList.toggle("active", view === "graph");
+
+      if (view === "graph") {
+        if (!chartInstance) {
+          initChart();
+        } else {
+          chartInstance.resize();
+        }
+        renderPills();
+        updateChart();
+      }
+    }
+
+    // ─── TABLE LOGIC ───
     function getBadge(subject) {
       if (subject === "Astronomy") return `<span class="badge badge-astro">Astronomy</span>`;
       if (subject === "Physics") return `<span class="badge badge-phys">Physics</span>`;
       return `<span class="badge badge-math">Maths</span>`;
     }
 
-    // Render Table
-    function render() {
-      // 1. Filter
+    function renderTable() {
       let data = RAW_DATA.filter(item => {
-        const matchesSubject = (currentSubject === "All") || (item.subject === currentSubject);
-        const matchesSearch = item.topic.toLowerCase().includes(searchQuery.toLowerCase());
-        return matchesSubject && matchesSearch;
+        const matchesSub = (tableSubject === "All") || (item.subject === tableSubject);
+        const matchesQuery = item.topic.toLowerCase().includes(tableSearch.toLowerCase());
+        return matchesSub && matchesQuery;
       });
 
-      // 2. Sort
       data.sort((a, b) => {
-        switch (currentSort) {
+        switch (tableSort) {
           case "weight-desc": return b.pct - a.pct;
           case "weight-asc":  return a.pct - b.pct;
           case "total-desc":   return b.total - a.total;
@@ -392,9 +547,8 @@
         }
       });
 
-      // 3. Render Rows
       const maxPct = 9.72;
-      tableBody.innerHTML = data.map(item => {
+      document.getElementById("tableBody").innerHTML = data.map(item => {
         const barWidth = Math.min(100, (item.pct / maxPct) * 100);
         return `
           <tr>
@@ -413,65 +567,185 @@
         `;
       }).join("");
 
-      // 4. Update Stats
       const totalMarksFiltered = data.reduce((acc, curr) => acc + curr.total, 0);
       const totalPctFiltered = ((totalMarksFiltered / 864) * 100).toFixed(1);
-
-      filteredCount.textContent = `Showing ${data.length} of ${RAW_DATA.length} topics`;
-      filteredMarks.textContent = `Filtered Total: ${totalMarksFiltered} marks (${totalPctFiltered}%)`;
+      document.getElementById("filteredCount").textContent = `Showing ${data.length} of ${RAW_DATA.length} topics`;
+      document.getElementById("filteredMarks").textContent = `Filtered Total: ${totalMarksFiltered} marks (${totalPctFiltered}%)`;
     }
 
-    // Dropdown Toggles & Click Outside
-    subjectBtn.addEventListener("click", (e) => {
+    // Dropdowns
+    const subContainer = document.getElementById("subjectFilterContainer");
+    const sortContainer = document.getElementById("sortFilterContainer");
+
+    document.getElementById("subjectBtn").addEventListener("click", (e) => {
       e.stopPropagation();
       sortContainer.classList.remove("open");
-      subjectContainer.classList.toggle("open");
+      subContainer.classList.toggle("open");
     });
 
-    sortBtn.addEventListener("click", (e) => {
+    document.getElementById("sortBtn").addEventListener("click", (e) => {
       e.stopPropagation();
-      subjectContainer.classList.remove("open");
+      subContainer.classList.remove("open");
       sortContainer.classList.toggle("open");
     });
 
     document.addEventListener("click", () => {
-      subjectContainer.classList.remove("open");
+      subContainer.classList.remove("open");
       sortContainer.classList.remove("open");
     });
 
-    // Subject Filter Selection
     document.querySelectorAll("#subjectMenu .menu-item").forEach(item => {
       item.addEventListener("click", () => {
         document.querySelectorAll("#subjectMenu .menu-item").forEach(el => el.classList.remove("active"));
         item.classList.add("active");
-        currentSubject = item.getAttribute("data-subject");
-        currentSubjectText.textContent = item.querySelector("span").textContent.split(" ")[0];
-        subjectContainer.classList.remove("open");
-        render();
+        tableSubject = item.getAttribute("data-subject");
+        document.getElementById("currentSubjectText").textContent = item.querySelector("span").textContent.split(" ")[0];
+        subContainer.classList.remove("open");
+        renderTable();
       });
     });
 
-    // Sort Option Selection
     document.querySelectorAll("#sortMenu .menu-item").forEach(item => {
       item.addEventListener("click", () => {
         document.querySelectorAll("#sortMenu .menu-item").forEach(el => el.classList.remove("active"));
         item.classList.add("active");
-        currentSort = item.getAttribute("data-sort");
-        currentSortText.textContent = item.querySelector("span").textContent;
+        tableSort = item.getAttribute("data-sort");
+        document.getElementById("currentSortText").textContent = item.querySelector("span").textContent;
         sortContainer.classList.remove("open");
-        render();
+        renderTable();
       });
     });
 
-    // Search Input Event
-    searchInput.addEventListener("input", (e) => {
-      searchQuery = e.target.value.trim();
-      render();
+    document.getElementById("tableSearchInput").addEventListener("input", (e) => {
+      tableSearch = e.target.value.trim();
+      renderTable();
     });
 
-    // Set Copyright Year & Initial Render
+    // ─── GRAPH LOGIC ───
+    function initChart() {
+      const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      const textColor = isDark ? "#8b949e" : "#64748b";
+      const gridColor = isDark ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.06)";
+
+      const ctx = document.getElementById("trendChart").getContext("2d");
+      chartInstance = new Chart(ctx, {
+        type: "line",
+        data: { labels: ["2022", "2023", "2024", "2025"], datasets: [] },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: "index", intersect: false },
+          plugins: {
+            legend: {
+              position: "top",
+              labels: { color: textColor, boxWidth: 12, usePointStyle: true }
+            },
+            tooltip: {
+              padding: 10,
+              boxPadding: 4,
+              usePointStyle: true,
+              callbacks: { label: (ctx) => ` ${ctx.dataset.label}: ${ctx.raw} marks` }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: { display: true, text: "Marks", color: textColor },
+              ticks: { stepSize: 3, color: textColor },
+              grid: { color: gridColor }
+            },
+            x: { ticks: { color: textColor }, grid: { color: gridColor } }
+          }
+        }
+      });
+    }
+
+    function updateChart() {
+      if (!chartInstance) return;
+      const datasets = [];
+      let colorIdx = 0;
+
+      selectedGraphTopics.forEach(topicName => {
+        const item = RAW_DATA.find(t => t.topic === topicName);
+        if (!item) return;
+        const color = COLORS[colorIdx % COLORS.length];
+        colorIdx++;
+
+        datasets.push({
+          label: item.topic,
+          data: [item.y2022, item.y2023, item.y2024, item.y2025],
+          borderColor: color,
+          backgroundColor: color,
+          borderWidth: 2.5,
+          pointRadius: 4,
+          pointHoverRadius: 6,
+          tension: 0.25
+        });
+      });
+
+      chartInstance.data.datasets = datasets;
+      chartInstance.update();
+      document.getElementById("selectionCount").textContent = `Showing ${selectedGraphTopics.size} active line${selectedGraphTopics.size === 1 ? '' : 's'}`;
+    }
+
+    function renderPills() {
+      const filtered = RAW_DATA.filter(t => {
+        const matchesSub = (graphSubject === "All") || (t.subject === graphSubject);
+        const matchesQuery = t.topic.toLowerCase().includes(graphSearch.toLowerCase());
+        return matchesSub && matchesQuery;
+      });
+
+      document.getElementById("pillGrid").innerHTML = filtered.map(t => {
+        const isActive = selectedGraphTopics.has(t.topic);
+        return `
+          <div class="topic-pill ${isActive ? 'active' : ''}" onclick="toggleGraphTopic('${t.topic.replace(/'/g, "\\'")}')">
+            <span>${isActive ? '✓ ' : ''}${t.topic}</span>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function toggleGraphTopic(name) {
+      if (selectedGraphTopics.has(name)) {
+        selectedGraphTopics.delete(name);
+      } else {
+        selectedGraphTopics.add(name);
+      }
+      renderPills();
+      updateChart();
+    }
+
+    function applyPreset(type) {
+      selectedGraphTopics.clear();
+      if (type === 'top5') {
+        RAW_DATA.slice(0, 5).forEach(t => selectedGraphTopics.add(t.topic));
+      } else if (type === 'astro') {
+        RAW_DATA.filter(t => t.subject === 'Astronomy').slice(0, 5).forEach(t => selectedGraphTopics.add(t.topic));
+      } else if (type === 'phys') {
+        RAW_DATA.filter(t => t.subject === 'Physics').slice(0, 5).forEach(t => selectedGraphTopics.add(t.topic));
+      } else if (type === 'math') {
+        RAW_DATA.filter(t => t.subject === 'Mathematics').slice(0, 5).forEach(t => selectedGraphTopics.add(t.topic));
+      }
+      renderPills();
+      updateChart();
+    }
+
+    function setGraphSubjectFilter(sub) {
+      graphSubject = sub;
+      document.querySelectorAll(".tab-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.getAttribute("data-subject") === sub);
+      });
+      renderPills();
+    }
+
+    document.getElementById("graphSearchInput").addEventListener("input", (e) => {
+      graphSearch = e.target.value.trim();
+      renderPills();
+    });
+
+    // Init
     document.getElementById("year").textContent = new Date().getFullYear();
-    render();
+    renderTable();
   </script>
 </body>
 </html>
