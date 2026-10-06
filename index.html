@@ -68,4 +68,159 @@
     .social-links {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.85
+      gap: 0.85rem;
+    }
+
+    .social-links a {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.9rem;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s;
+    }
+
+    .social-links a:hover {
+      border-bottom-color: var(--accent);
+    }
+
+    section {
+      margin-bottom: 3rem;
+    }
+
+    h2 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    p {
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+
+    /* Resource Link Card */
+    .resource-card {
+      display: block;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      text-decoration: none;
+      color: inherit;
+      transition: border-color 0.2s, transform 0.15s ease;
+    }
+
+    .resource-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .card-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 0.75rem;
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .tag {
+      font-size: 0.75rem;
+      background: var(--tag-bg);
+      color: var(--text-muted);
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 4rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- Profile Header -->
+    <header>
+      <h1>Nirbhay Saxena</h1>
+      <p class="subtitle">Physics &bull; Astronomy &bull; Olympiad Preparation</p>
+      
+      <div class="social-links">
+        <a href="https://github.com/nirbhaysax" target="_blank" rel="noopener">GitHub ↗</a>
+        <a href="mailto:your-email@example.com">Email ↗</a>
+      </div>
+    </header>
+
+    <!-- About Section -->
+    <section>
+      <h2>About</h2>
+      <p>
+        Welcome! This is my personal site where I document notes, curate learning tools, 
+        and publish data-driven resources for astronomy and physics competitions.
+      </p>
+    </section>
+
+    <!-- Curated Resources Section -->
+    <section>
+      <h2>Resources</h2>
+      
+      <!-- Link directly to the table/graph subpage -->
+      <a href="resources/nsea-table/" class="resource-card">
+        <div class="card-top">
+          <span class="card-title">NSEA Mark Distribution Analysis (2018–2025) &rarr;</span>
+        </div>
+        <p class="card-desc">
+          Official IAPT syllabus-aligned analysis across 8 examination papers (1,464 raw marks). 
+          Includes multi-topic credit accounting, filterable table view, and an 8-year trend graph.
+        </p>
+        <div class="tag-list">
+          <span class="tag">Table & Graph Views</span>
+          <span class="tag">8 Years (2018–2025)</span>
+          <span class="tag">Official Syllabus</span>
+        </div>
+      </a>
+      
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      &copy; <span id="year"></span> Nirbhay Saxena &bull; Hosted on GitHub Pages
+    </footer>
+
+  </div>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
