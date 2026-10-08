@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Resources / NSEA Analysis — Nirbhay Saxena</title>
-  <meta name="description" content="Official syllabus-aligned topic mark distribution & trend analysis for NSEA (2018–2025).">
+  <meta name="description" content="Official syllabus-aligned topic mark distribution & trend analysis for NSEA (2016–2025).">
 
   <!-- Chart.js via CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -58,7 +58,7 @@
       line-height: 1.6;
       padding: 2.5rem 1.25rem;
     }
-    .container { max-width: 1040px; margin: 0 auto; }
+    .container { max-width: 1100px; margin: 0 auto; }
 
     /* Top Nav & Switcher */
     .top-nav {
@@ -175,17 +175,17 @@
       overflow-x: auto;
       background: var(--bg);
     }
-    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem; min-width: 900px; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.825rem; min-width: 1020px; }
     th {
       background: var(--card-bg);
-      padding: 0.75rem 0.6rem;
+      padding: 0.75rem 0.55rem;
       font-weight: 600;
       color: var(--text-muted);
       border-bottom: 1px solid var(--border);
       white-space: nowrap;
     }
     td {
-      padding: 0.6rem 0.6rem;
+      padding: 0.55rem 0.55rem;
       border-bottom: 1px solid var(--border);
       white-space: nowrap;
       font-variant-numeric: tabular-nums;
@@ -280,14 +280,14 @@
 
     <!-- Header -->
     <header>
-      <h1 class="section-title">NSEA Mark Distribution Analysis (2018–2025)</h1>
+      <h1 class="section-title">NSEA Mark Distribution Analysis (2016–2025)</h1>
       <p class="section-desc">
-        Analysis aligned strictly with the official IAPT syllabus across 8 test sessions (1,464 raw marks).
+        Official IAPT syllabus-aligned analysis across 10 exam papers (1,944 raw marks).
         Multi-topic questions award full marks to each constituent syllabus topic.
       </p>
 
       <div class="summary-bar">
-        <div class="stat-pill"><span class="stat-label">Evaluated Sessions:</span> <span class="stat-val">8 Papers (2018–2025)</span></div>
+        <div class="stat-pill"><span class="stat-label">Evaluated Sessions:</span> <span class="stat-val">10 Papers (2016–2025)</span></div>
         <div class="stat-pill">&bull;</div>
         <div class="stat-pill"><span class="badge badge-astro">Astronomy</span> <span class="stat-val">19 Topics</span></div>
         <div class="stat-pill">&bull;</div>
@@ -340,6 +340,8 @@
             <div class="menu-item" data-sort="2020-desc"><span>2020 Marks: High to Low</span><span class="check">✓</span></div>
             <div class="menu-item" data-sort="2019-desc"><span>2019 Marks: High to Low</span><span class="check">✓</span></div>
             <div class="menu-item" data-sort="2018-desc"><span>2018 Marks: High to Low</span><span class="check">✓</span></div>
+            <div class="menu-item" data-sort="2017-desc"><span>2017 Marks: High to Low</span><span class="check">✓</span></div>
+            <div class="menu-item" data-sort="2016-desc"><span>2016 Marks: High to Low</span><span class="check">✓</span></div>
 
             <div class="menu-divider"></div>
             <div class="menu-group-title">Alphabetical & Subject</div>
@@ -355,8 +357,10 @@
         <table>
           <thead>
             <tr>
-              <th style="width: 110px;">Subject</th>
+              <th style="width: 105px;">Subject</th>
               <th>Official Syllabus Topic</th>
+              <th class="col-num">2016</th>
+              <th class="col-num">2017</th>
               <th class="col-num">2018</th>
               <th class="col-num">2019</th>
               <th class="col-num">2020</th>
@@ -366,7 +370,7 @@
               <th class="col-num">2024</th>
               <th class="col-num">2025</th>
               <th class="col-num">Total</th>
-              <th class="col-num" style="width: 110px;">Weight %</th>
+              <th class="col-num" style="width: 100px;">Weight %</th>
             </tr>
           </thead>
           <tbody id="tableBody"></tbody>
@@ -389,7 +393,7 @@
 
       <div class="controls-panel">
         <div class="panel-header">
-          <span class="panel-title">Toggle Topics to Compare Across 8 Years</span>
+          <span class="panel-title">Toggle Topics to Compare Across 10 Years (2016–2025)</span>
           <div class="preset-group">
             <button class="preset-btn" onclick="applyPreset('top5')">Top 5 Overall</button>
             <button class="preset-btn" onclick="applyPreset('astro')">Top Astronomy</button>
@@ -422,80 +426,80 @@
   </div>
 
   <script>
-    // ─── FULL DATASET: 8 SESSIONS (2018–2025) ACCORDING TO OFFICIAL IAPT SYLLABUS ───
+    // ─── FULL DATASET: 10 SESSIONS (2016–2025) ACCORDING TO OFFICIAL IAPT SYLLABUS ───
     // Multi-topic questions award full marks to each applicable topic.
     const RAW_DATA = [
       // --- Elementary Astronomical Notions ---
-      { topic: "Stars", y2018: 30, y2019: 27, y2020: 12, y2021: 15, y2022: 24, y2023: 30, y2024: 33, y2025: 21, total: 192, pct: 10.4, subject: "Astronomy" },
-      { topic: "Gravitation & Planetary Dynamics", y2018: 27, y2019: 24, y2020: 15, y2021: 18, y2022: 18, y2023: 15, y2024: 21, y2025: 15, total: 148, pct: 8.0, subject: "Physics" },
-      { topic: "Working principle of Telescopes", y2018: 9, y2019: 12, y2020: 6, y2021: 9, y2022: 6, y2023: 18, y2024: 9, y2025: 12, total: 81, pct: 4.4, subject: "Astronomy" },
-      { topic: "Planets and their moons", y2018: 12, y2019: 15, y2020: 6, y2021: 6, y2022: 9, y2023: 12, y2024: 9, y2025: 6, total: 75, pct: 4.1, subject: "Astronomy" },
-      { topic: "Diurnal motion of Earth", y2018: 6, y2019: 9, y2020: 3, y2021: 6, y2022: 3, y2023: 12, y2024: 6, y2025: 12, total: 57, pct: 3.1, subject: "Astronomy" },
-      { topic: "Sun", y2018: 9, y2019: 9, y2020: 6, y2021: 6, y2022: 9, y2023: 12, y2024: 3, y2025: 3, total: 57, pct: 3.1, subject: "Astronomy" },
-      { topic: "Galaxies & Clusters of galaxies", y2018: 9, y2019: 6, y2020: 3, y2021: 3, y2022: 3, y2023: 12, y2024: 9, y2025: 3, total: 48, pct: 2.6, subject: "Astronomy" },
-      { topic: "Solar System & Associated Phenomena", y2018: 6, y2019: 9, y2020: 3, y2021: 3, y2022: 6, y2023: 12, y2024: 3, y2025: 6, total: 48, pct: 2.6, subject: "Astronomy" },
-      { topic: "Paths of solar system objects in the night sky", y2018: 6, y2019: 6, y2020: 3, y2021: 0, y2022: 9, y2023: 3, y2024: 3, y2025: 12, total: 42, pct: 2.3, subject: "Astronomy" },
-      { topic: "Rising and setting of stars", y2018: 6, y2019: 3, y2020: 0, y2021: 3, y2022: 3, y2023: 3, y2024: 3, y2025: 18, total: 39, pct: 2.1, subject: "Astronomy" },
-      { topic: "Tides", y2018: 6, y2019: 6, y2020: 0, y2021: 3, y2022: 9, y2023: 3, y2024: 9, y2025: 0, total: 36, pct: 2.0, subject: "Astronomy" },
-      { topic: "Comets", y2018: 3, y2019: 6, y2020: 3, y2021: 3, y2022: 6, y2023: 3, y2024: 3, y2025: 9, total: 36, pct: 2.0, subject: "Astronomy" },
-      { topic: "Seasons", y2018: 3, y2019: 6, y2020: 0, y2021: 3, y2022: 3, y2023: 3, y2024: 9, y2025: 6, total: 33, pct: 1.8, subject: "Astronomy" },
-      { topic: "Common constellations & Brightest stars", y2018: 3, y2019: 6, y2020: 0, y2021: 3, y2022: 3, y2023: 3, y2024: 3, y2025: 9, total: 30, pct: 1.6, subject: "Astronomy" },
-      { topic: "Milky Way", y2018: 6, y2019: 3, y2020: 0, y2021: 3, y2022: 3, y2023: 3, y2024: 3, y2025: 9, total: 30, pct: 1.6, subject: "Astronomy" },
-      { topic: "Asteroids", y2018: 3, y2019: 3, y2020: 3, y2021: 0, y2022: 6, y2023: 3, y2024: 3, y2025: 3, total: 24, pct: 1.3, subject: "Astronomy" },
-      { topic: "Phases of the Moon", y2018: 3, y2019: 3, y2020: 0, y2021: 3, y2022: 6, y2023: 3, y2024: 3, y2025: 3, total: 24, pct: 1.3, subject: "Astronomy" },
-      { topic: "Eclipses", y2018: 3, y2019: 3, y2020: 0, y2021: 0, y2022: 3, y2023: 3, y2024: 3, y2025: 3, total: 18, pct: 1.0, subject: "Astronomy" },
-      { topic: "Major historical landmarks in Astronomy", y2018: 3, y2019: 3, y2020: 0, y2021: 0, y2022: 0, y2023: 3, y2024: 3, y2025: 0, total: 12, pct: 0.6, subject: "Astronomy" },
+      { topic: "Stars", y2016: 30, y2017: 27, y2018: 30, y2019: 27, y2020: 12, y2021: 15, y2022: 24, y2023: 30, y2024: 33, y2025: 21, total: 249, pct: 10.2, subject: "Astronomy" },
+      { topic: "Gravitation & Planetary Dynamics", y2016: 24, y2017: 27, y2018: 27, y2019: 24, y2020: 15, y2021: 18, y2022: 18, y2023: 15, y2024: 21, y2025: 15, total: 199, pct: 8.2, subject: "Physics" },
+      { topic: "Working principle of Telescopes", y2016: 12, y2017: 12, y2018: 9, y2019: 12, y2020: 6, y2021: 9, y2022: 6, y2023: 18, y2024: 9, y2025: 12, total: 105, pct: 4.3, subject: "Astronomy" },
+      { topic: "Planets and their moons", y2016: 15, y2017: 12, y2018: 12, y2019: 15, y2020: 6, y2021: 6, y2022: 9, y2023: 12, y2024: 9, y2025: 6, total: 102, pct: 4.2, subject: "Astronomy" },
+      { topic: "Diurnal motion of Earth", y2016: 9, y2017: 9, y2018: 6, y2019: 9, y2020: 3, y2021: 6, y2022: 3, y2023: 12, y2024: 6, y2025: 12, total: 75, pct: 3.1, subject: "Astronomy" },
+      { topic: "Sun", y2016: 9, y2017: 6, y2018: 9, y2019: 9, y2020: 6, y2021: 6, y2022: 9, y2023: 12, y2024: 3, y2025: 3, total: 72, pct: 3.0, subject: "Astronomy" },
+      { topic: "Galaxies & Clusters of galaxies", y2016: 6, y2017: 9, y2018: 9, y2019: 6, y2020: 3, y2021: 3, y2022: 3, y2023: 12, y2024: 9, y2025: 3, total: 63, pct: 2.6, subject: "Astronomy" },
+      { topic: "Solar System & Associated Phenomena", y2016: 6, y2017: 9, y2018: 6, y2019: 9, y2020: 3, y2021: 3, y2022: 6, y2023: 12, y2024: 3, y2025: 6, total: 63, pct: 2.6, subject: "Astronomy" },
+      { topic: "Paths of solar system objects in the night sky", y2016: 6, y2017: 6, y2018: 6, y2019: 6, y2020: 3, y2021: 0, y2022: 9, y2023: 3, y2024: 3, y2025: 12, total: 54, pct: 2.2, subject: "Astronomy" },
+      { topic: "Rising and setting of stars", y2016: 3, y2017: 6, y2018: 6, y2019: 3, y2020: 0, y2021: 3, y2022: 3, y2023: 3, y2024: 3, y2025: 18, total: 48, pct: 2.0, subject: "Astronomy" },
+      { topic: "Tides", y2016: 6, y2017: 6, y2018: 6, y2019: 6, y2020: 0, y2021: 3, y2022: 9, y2023: 3, y2024: 9, y2025: 0, total: 48, pct: 2.0, subject: "Astronomy" },
+      { topic: "Comets", y2016: 6, y2017: 6, y2018: 3, y2019: 6, y2020: 3, y2021: 3, y2022: 6, y2023: 3, y2024: 3, y2025: 9, total: 48, pct: 2.0, subject: "Astronomy" },
+      { topic: "Seasons", y2016: 6, y2017: 3, y2018: 3, y2019: 6, y2020: 0, y2021: 3, y2022: 3, y2023: 3, y2024: 9, y2025: 6, total: 42, pct: 1.7, subject: "Astronomy" },
+      { topic: "Common constellations & Brightest stars", y2016: 3, y2017: 6, y2018: 3, y2019: 6, y2020: 0, y2021: 3, y2022: 3, y2023: 3, y2024: 3, y2025: 9, total: 39, pct: 1.6, subject: "Astronomy" },
+      { topic: "Milky Way", y2016: 3, y2017: 6, y2018: 6, y2019: 3, y2020: 0, y2021: 3, y2022: 3, y2023: 3, y2024: 3, y2025: 9, total: 39, pct: 1.6, subject: "Astronomy" },
+      { topic: "Asteroids", y2016: 3, y2017: 3, y2018: 3, y2019: 3, y2020: 3, y2021: 0, y2022: 6, y2023: 3, y2024: 3, y2025: 3, total: 30, pct: 1.2, subject: "Astronomy" },
+      { topic: "Phases of the Moon", y2016: 3, y2017: 3, y2018: 3, y2019: 3, y2020: 0, y2021: 3, y2022: 6, y2023: 3, y2024: 3, y2025: 3, total: 30, pct: 1.2, subject: "Astronomy" },
+      { topic: "Eclipses", y2016: 3, y2017: 3, y2018: 3, y2019: 3, y2020: 0, y2021: 0, y2022: 3, y2023: 3, y2024: 3, y2025: 3, total: 24, pct: 1.0, subject: "Astronomy" },
+      { topic: "Major historical landmarks in Astronomy", y2016: 3, y2017: 0, y2018: 3, y2019: 3, y2020: 0, y2021: 0, y2022: 0, y2023: 3, y2024: 3, y2025: 0, total: 15, pct: 0.6, subject: "Astronomy" },
 
       // --- Physics ---
-      { topic: "Ray Optics and Optical Instruments", y2018: 15, y2019: 12, y2020: 9, y2021: 9, y2022: 9, y2023: 9, y2024: 9, y2025: 9, total: 81, pct: 4.4, subject: "Physics" },
-      { topic: "System of Particles and Rotational Motion", y2018: 12, y2019: 9, y2020: 6, y2021: 9, y2022: 6, y2023: 6, y2024: 6, y2025: 6, total: 60, pct: 3.2, subject: "Physics" },
-      { topic: "Motion in a Plane", y2018: 9, y2019: 9, y2020: 6, y2021: 6, y2022: 6, y2023: 6, y2024: 3, y2025: 12, total: 57, pct: 3.1, subject: "Physics" },
-      { topic: "Thermal Properties of Matter", y2018: 6, y2019: 9, y2020: 3, y2021: 6, y2022: 6, y2023: 6, y2024: 6, y2025: 9, total: 51, pct: 2.8, subject: "Physics" },
-      { topic: "Electrostatics", y2018: 6, y2019: 6, y2020: 3, y2021: 6, y2022: 6, y2023: 6, y2024: 9, y2025: 9, total: 51, pct: 2.8, subject: "Physics" },
-      { topic: "Current Electricity", y2018: 6, y2019: 6, y2020: 3, y2021: 6, y2022: 6, y2023: 9, y2024: 6, y2025: 9, total: 51, pct: 2.8, subject: "Physics" },
-      { topic: "Laws of Motion", y2018: 9, y2019: 6, y2020: 3, y2021: 6, y2022: 9, y2023: 6, y2024: 3, y2025: 3, total: 45, pct: 2.4, subject: "Physics" },
-      { topic: "Units and Measurements", y2018: 6, y2019: 6, y2020: 3, y2021: 3, y2022: 6, y2023: 6, y2024: 6, y2025: 6, total: 42, pct: 2.3, subject: "Physics" },
-      { topic: "Atoms and Nuclei", y2018: 6, y2019: 6, y2020: 3, y2021: 3, y2022: 6, y2023: 6, y2024: 9, y2025: 3, total: 42, pct: 2.3, subject: "Physics" },
-      { topic: "Thermodynamics", y2018: 6, y2019: 6, y2020: 3, y2021: 3, y2022: 6, y2023: 6, y2024: 6, y2025: 6, total: 42, pct: 2.3, subject: "Physics" },
-      { topic: "Magnetic Effects of Current and Magnetism", y2018: 6, y2019: 3, y2020: 3, y2021: 3, y2022: 6, y2023: 6, y2024: 6, y2025: 9, total: 42, pct: 2.3, subject: "Physics" },
-      { topic: "Wave Optics", y2018: 6, y2019: 6, y2020: 3, y2021: 3, y2022: 6, y2023: 3, y2024: 9, y2025: 3, total: 39, pct: 2.1, subject: "Physics" },
-      { topic: "Work, Energy and Power", y2018: 6, y2019: 6, y2020: 3, y2021: 3, y2022: 3, y2023: 6, y2024: 3, y2025: 3, total: 33, pct: 1.8, subject: "Physics" },
-      { topic: "Mechanical Properties of Fluids", y2018: 3, y2019: 6, y2020: 3, y2021: 3, y2022: 6, y2023: 6, y2024: 6, y2025: 0, total: 33, pct: 1.8, subject: "Physics" },
-      { topic: "Oscillations and Waves", y2018: 3, y2019: 6, y2020: 3, y2021: 3, y2022: 6, y2023: 6, y2024: 3, y2025: 3, total: 33, pct: 1.8, subject: "Physics" },
-      { topic: "Alternating Current", y2018: 3, y2019: 3, y2020: 0, y2021: 3, y2022: 3, y2023: 6, y2024: 6, y2025: 9, total: 33, pct: 1.8, subject: "Physics" },
-      { topic: "Dual Nature of Radiation and Matter", y2018: 3, y2019: 3, y2020: 3, y2021: 3, y2022: 3, y2023: 3, y2024: 9, y2025: 3, total: 30, pct: 1.6, subject: "Physics" },
-      { topic: "Kinetic Theory of Gases & Perfect Gases", y2018: 3, y2019: 3, y2020: 3, y2021: 3, y2022: 3, y2023: 6, y2024: 6, y2025: 0, total: 27, pct: 1.5, subject: "Physics" },
-      { topic: "Motion in a Straight Line", y2018: 3, y2019: 6, y2020: 0, y2021: 3, y2022: 6, y2023: 3, y2024: 3, y2025: 3, total: 27, pct: 1.5, subject: "Physics" },
-      { topic: "Electromagnetic Induction", y2018: 3, y2019: 3, y2020: 3, y2021: 0, y2022: 6, y2023: 3, y2024: 3, y2025: 3, total: 24, pct: 1.3, subject: "Physics" },
-      { topic: "Electromagnetic Waves", y2018: 3, y2019: 3, y2020: 0, y2021: 3, y2022: 3, y2023: 3, y2024: 6, y2025: 3, total: 24, pct: 1.3, subject: "Physics" },
-      { topic: "Electronic Devices", y2018: 3, y2019: 3, y2020: 0, y2021: 0, y2022: 3, y2023: 6, y2024: 3, y2025: 6, total: 24, pct: 1.3, subject: "Physics" },
-      { topic: "Mechanical Properties of Solids", y2018: 0, y2019: 3, y2020: 0, y2021: 0, y2022: 3, y2023: 3, y2024: 3, y2025: 6, total: 18, pct: 1.0, subject: "Physics" },
+      { topic: "Ray Optics and Optical Instruments", y2016: 15, y2017: 15, y2018: 15, y2019: 12, y2020: 9, y2021: 9, y2022: 9, y2023: 9, y2024: 9, y2025: 9, total: 111, pct: 4.6, subject: "Physics" },
+      { topic: "System of Particles and Rotational Motion", y2016: 12, y2017: 12, y2018: 12, y2019: 9, y2020: 6, y2021: 9, y2022: 6, y2023: 6, y2024: 6, y2025: 6, total: 84, pct: 3.5, subject: "Physics" },
+      { topic: "Motion in a Plane", y2016: 9, y2017: 9, y2018: 9, y2019: 9, y2020: 6, y2021: 6, y2022: 6, y2023: 6, y2024: 3, y2025: 12, total: 75, pct: 3.1, subject: "Physics" },
+      { topic: "Thermal Properties of Matter", y2016: 6, y2017: 9, y2018: 6, y2019: 9, y2020: 3, y2021: 6, y2022: 6, y2023: 6, y2024: 6, y2025: 9, total: 66, pct: 2.7, subject: "Physics" },
+      { topic: "Current Electricity", y2016: 6, y2017: 6, y2018: 6, y2019: 6, y2020: 3, y2021: 6, y2022: 6, y2023: 9, y2024: 6, y2025: 9, total: 63, pct: 2.6, subject: "Physics" },
+      { topic: "Electrostatics", y2016: 6, y2017: 6, y2018: 6, y2019: 6, y2020: 3, y2021: 6, y2022: 6, y2023: 6, y2024: 9, y2025: 9, total: 63, pct: 2.6, subject: "Physics" },
+      { topic: "Laws of Motion", y2016: 6, y2017: 9, y2018: 9, y2019: 6, y2020: 3, y2021: 6, y2022: 9, y2023: 6, y2024: 3, y2025: 3, total: 60, pct: 2.5, subject: "Physics" },
+      { topic: "Units and Measurements", y2016: 6, y2017: 6, y2018: 6, y2019: 6, y2020: 3, y2021: 3, y2022: 6, y2023: 6, y2024: 6, y2025: 6, total: 54, pct: 2.2, subject: "Physics" },
+      { topic: "Atoms and Nuclei", y2016: 6, y2017: 6, y2018: 6, y2019: 6, y2020: 3, y2021: 3, y2022: 6, y2023: 6, y2024: 9, y2025: 3, total: 54, pct: 2.2, subject: "Physics" },
+      { topic: "Thermodynamics", y2016: 6, y2017: 6, y2018: 6, y2019: 6, y2020: 3, y2021: 3, y2022: 6, y2023: 6, y2024: 6, y2025: 6, total: 54, pct: 2.2, subject: "Physics" },
+      { topic: "Magnetic Effects of Current and Magnetism", y2016: 6, y2017: 6, y2018: 6, y2019: 3, y2020: 3, y2021: 3, y2022: 6, y2023: 6, y2024: 6, y2025: 9, total: 54, pct: 2.2, subject: "Physics" },
+      { topic: "Wave Optics", y2016: 6, y2017: 6, y2018: 6, y2019: 6, y2020: 3, y2021: 3, y2022: 6, y2023: 3, y2024: 9, y2025: 3, total: 51, pct: 2.1, subject: "Physics" },
+      { topic: "Work, Energy and Power", y2016: 6, y2017: 6, y2018: 6, y2019: 6, y2020: 3, y2021: 3, y2022: 3, y2023: 6, y2024: 3, y2025: 3, total: 45, pct: 1.9, subject: "Physics" },
+      { topic: "Oscillations and Waves", y2016: 6, y2017: 6, y2018: 3, y2019: 6, y2020: 3, y2021: 3, y2022: 6, y2023: 6, y2024: 3, y2025: 3, total: 45, pct: 1.9, subject: "Physics" },
+      { topic: "Mechanical Properties of Fluids", y2016: 6, y2017: 3, y2018: 3, y2019: 6, y2020: 3, y2021: 3, y2022: 6, y2023: 6, y2024: 6, y2025: 0, total: 42, pct: 1.7, subject: "Physics" },
+      { topic: "Alternating Current", y2016: 3, y2017: 3, y2018: 3, y2019: 3, y2020: 0, y2021: 3, y2022: 3, y2023: 6, y2024: 6, y2025: 9, total: 39, pct: 1.6, subject: "Physics" },
+      { topic: "Motion in a Straight Line", y2016: 6, y2017: 6, y2018: 3, y2019: 6, y2020: 0, y2021: 3, y2022: 6, y2023: 3, y2024: 3, y2025: 3, total: 39, pct: 1.6, subject: "Physics" },
+      { topic: "Dual Nature of Radiation and Matter", y2016: 3, y2017: 3, y2018: 3, y2019: 3, y2020: 3, y2021: 3, y2022: 3, y2023: 3, y2024: 9, y2025: 3, total: 36, pct: 1.5, subject: "Physics" },
+      { topic: "Kinetic Theory of Gases & Perfect Gases", y2016: 3, y2017: 3, y2018: 3, y2019: 3, y2020: 3, y2021: 3, y2022: 3, y2023: 6, y2024: 6, y2025: 0, total: 33, pct: 1.4, subject: "Physics" },
+      { topic: "Electromagnetic Induction", y2016: 3, y2017: 3, y2018: 3, y2019: 3, y2020: 3, y2021: 0, y2022: 6, y2023: 3, y2024: 3, y2025: 3, total: 30, pct: 1.2, subject: "Physics" },
+      { topic: "Electromagnetic Waves", y2016: 3, y2017: 3, y2018: 3, y2019: 3, y2020: 0, y2021: 3, y2022: 3, y2023: 3, y2024: 6, y2025: 3, total: 30, pct: 1.2, subject: "Physics" },
+      { topic: "Electronic Devices", y2016: 3, y2017: 3, y2018: 3, y2019: 3, y2020: 0, y2021: 0, y2022: 3, y2023: 6, y2024: 3, y2025: 6, total: 30, pct: 1.2, subject: "Physics" },
+      { topic: "Mechanical Properties of Solids", y2016: 3, y2017: 3, y2018: 0, y2019: 3, y2020: 0, y2021: 0, y2022: 3, y2023: 3, y2024: 3, y2025: 6, total: 24, pct: 1.0, subject: "Physics" },
 
       // --- Mathematics ---
-      { topic: "Continuity and Differentiability", y2018: 9, y2019: 9, y2020: 3, y2021: 6, y2022: 6, y2023: 12, y2024: 12, y2025: 6, total: 63, pct: 3.4, subject: "Mathematics" },
-      { topic: "Sequence and Series", y2018: 9, y2019: 6, y2020: 3, y2021: 3, y2022: 6, y2023: 3, y2024: 3, y2025: 21, total: 54, pct: 2.9, subject: "Mathematics" },
-      { topic: "Trigonometric Functions", y2018: 6, y2019: 6, y2020: 3, y2021: 6, y2022: 3, y2023: 6, y2024: 9, y2025: 12, total: 51, pct: 2.8, subject: "Mathematics" },
-      { topic: "Probability", y2018: 6, y2019: 6, y2020: 3, y2021: 3, y2022: 6, y2023: 9, y2024: 6, y2025: 12, total: 51, pct: 2.8, subject: "Mathematics" },
-      { topic: "Determinants", y2018: 6, y2019: 6, y2020: 3, y2021: 3, y2022: 6, y2023: 6, y2024: 9, y2025: 12, total: 51, pct: 2.8, subject: "Mathematics" },
-      { topic: "Conic Sections", y2018: 6, y2019: 6, y2020: 3, y2021: 3, y2022: 3, y2023: 3, y2024: 15, y2025: 6, total: 45, pct: 2.4, subject: "Mathematics" },
-      { topic: "Vectors Algebra", y2018: 9, y2019: 6, y2020: 3, y2021: 3, y2022: 9, y2023: 9, y2024: 3, y2025: 3, total: 45, pct: 2.4, subject: "Mathematics" },
-      { topic: "Complex Numbers & Quadratic Equations", y2018: 3, y2019: 6, y2020: 3, y2021: 3, y2022: 3, y2023: 6, y2024: 6, y2025: 15, total: 45, pct: 2.4, subject: "Mathematics" },
-      { topic: "Straight Lines", y2018: 6, y2019: 6, y2020: 3, y2021: 3, y2022: 6, y2023: 6, y2024: 6, y2025: 6, total: 42, pct: 2.3, subject: "Mathematics" },
-      { topic: "Linear Inequalities", y2018: 6, y2019: 6, y2020: 3, y2021: 3, y2022: 6, y2023: 6, y2024: 6, y2025: 3, total: 39, pct: 2.1, subject: "Mathematics" },
-      { topic: "Permutations and Combinations", y2018: 6, y2019: 3, y2020: 0, y2021: 3, y2022: 12, y2023: 3, y2024: 9, y2025: 3, total: 39, pct: 2.1, subject: "Mathematics" },
-      { topic: "Applications of Derivatives", y2018: 6, y2019: 3, y2020: 3, y2021: 3, y2022: 6, y2023: 6, y2024: 9, y2025: 3, total: 39, pct: 2.1, subject: "Mathematics" },
-      { topic: "Integrals", y2018: 3, y2019: 6, y2020: 3, y2021: 3, y2022: 3, y2023: 6, y2024: 6, y2025: 9, total: 39, pct: 2.1, subject: "Mathematics" },
-      { topic: "Introduction to 3D Geometry", y2018: 6, y2019: 3, y2020: 3, y2021: 3, y2022: 6, y2023: 6, y2024: 3, y2025: 3, total: 33, pct: 1.8, subject: "Mathematics" },
-      { topic: "Relations and Functions", y2018: 3, y2019: 6, y2020: 0, y2021: 3, y2022: 6, y2023: 6, y2024: 6, y2025: 3, total: 33, pct: 1.8, subject: "Mathematics" },
-      { topic: "Linear Programming", y2018: 3, y2019: 3, y2020: 0, y2021: 3, y2022: 3, y2023: 9, y2024: 9, y2025: 0, total: 30, pct: 1.6, subject: "Mathematics" },
-      { topic: "Differential Equations", y2018: 3, y2019: 3, y2020: 0, y2021: 3, y2022: 3, y2023: 12, y2024: 3, y2025: 3, total: 30, pct: 1.6, subject: "Mathematics" },
-      { topic: "Matrices", y2018: 3, y2019: 3, y2020: 3, y2021: 0, y2022: 6, y2023: 3, y2024: 3, y2025: 3, total: 24, pct: 1.3, subject: "Mathematics" },
-      { topic: "Binomial Theorem", y2018: 3, y2019: 3, y2020: 0, y2021: 0, y2022: 9, y2023: 3, y2024: 3, y2025: 3, total: 24, pct: 1.3, subject: "Mathematics" },
-      { topic: "Applications of Integrals", y2018: 0, y2019: 3, y2020: 0, y2021: 0, y2022: 3, y2023: 6, y2024: 6, y2025: 3, total: 21, pct: 1.1, subject: "Mathematics" },
-      { topic: "Sets", y2018: 3, y2019: 3, y2020: 0, y2021: 0, y2022: 6, y2023: 3, y2024: 3, y2025: 3, total: 21, pct: 1.1, subject: "Mathematics" },
-      { topic: "Limits and Derivatives", y2018: 0, y2019: 3, y2020: 0, y2021: 0, y2022: 3, y2023: 3, y2024: 3, y2025: 6, total: 18, pct: 1.0, subject: "Mathematics" },
-      { topic: "Inverse Trigonometric Functions", y2018: 3, y2019: 0, y2020: 0, y2021: 0, y2022: 6, y2023: 3, y2024: 3, y2025: 3, total: 18, pct: 1.0, subject: "Mathematics" },
-      { topic: "Statistics", y2018: 0, y2019: 0, y2020: 0, y2021: 0, y2022: 3, y2023: 0, y2024: 0, y2025: 3, total: 6, pct: 0.3, subject: "Mathematics" }
+      { topic: "Continuity and Differentiability", y2016: 9, y2017: 9, y2018: 9, y2019: 9, y2020: 3, y2021: 6, y2022: 6, y2023: 12, y2024: 12, y2025: 6, total: 81, pct: 3.3, subject: "Mathematics" },
+      { topic: "Sequence and Series", y2016: 6, y2017: 9, y2018: 9, y2019: 6, y2020: 3, y2021: 3, y2022: 6, y2023: 3, y2024: 3, y2025: 21, total: 69, pct: 2.8, subject: "Mathematics" },
+      { topic: "Trigonometric Functions", y2016: 6, y2017: 9, y2018: 6, y2019: 6, y2020: 3, y2021: 6, y2022: 3, y2023: 6, y2024: 9, y2025: 12, total: 66, pct: 2.7, subject: "Mathematics" },
+      { topic: "Probability", y2016: 6, y2017: 6, y2018: 6, y2019: 6, y2020: 3, y2021: 3, y2022: 6, y2023: 9, y2024: 6, y2025: 12, total: 63, pct: 2.6, subject: "Mathematics" },
+      { topic: "Determinants", y2016: 6, y2017: 6, y2018: 6, y2019: 6, y2020: 3, y2021: 3, y2022: 6, y2023: 6, y2024: 9, y2025: 12, total: 63, pct: 2.6, subject: "Mathematics" },
+      { topic: "Vectors Algebra", y2016: 6, y2017: 9, y2018: 9, y2019: 6, y2020: 3, y2021: 3, y2022: 9, y2023: 9, y2024: 3, y2025: 3, total: 60, pct: 2.5, subject: "Mathematics" },
+      { topic: "Conic Sections", y2016: 6, y2017: 6, y2018: 6, y2019: 6, y2020: 3, y2021: 3, y2022: 3, y2023: 3, y2024: 15, y2025: 6, total: 57, pct: 2.3, subject: "Mathematics" },
+      { topic: "Straight Lines", y2016: 6, y2017: 9, y2018: 6, y2019: 6, y2020: 3, y2021: 3, y2022: 6, y2023: 6, y2024: 6, y2025: 6, total: 57, pct: 2.3, subject: "Mathematics" },
+      { topic: "Complex Numbers & Quadratic Equations", y2016: 3, y2017: 6, y2018: 3, y2019: 6, y2020: 3, y2021: 3, y2022: 3, y2023: 6, y2024: 6, y2025: 15, total: 54, pct: 2.2, subject: "Mathematics" },
+      { topic: "Permutations and Combinations", y2016: 6, y2017: 6, y2018: 6, y2019: 3, y2020: 0, y2021: 3, y2022: 12, y2023: 3, y2024: 9, y2025: 3, total: 51, pct: 2.1, subject: "Mathematics" },
+      { topic: "Linear Inequalities", y2016: 6, y2017: 6, y2018: 6, y2019: 6, y2020: 3, y2021: 3, y2022: 6, y2023: 6, y2024: 6, y2025: 3, total: 51, pct: 2.1, subject: "Mathematics" },
+      { topic: "Applications of Derivatives", y2016: 6, y2017: 6, y2018: 6, y2019: 3, y2020: 3, y2021: 3, y2022: 6, y2023: 6, y2024: 9, y2025: 3, total: 51, pct: 2.1, subject: "Mathematics" },
+      { topic: "Integrals", y2016: 6, y2017: 6, y2018: 3, y2019: 6, y2020: 3, y2021: 3, y2022: 3, y2023: 6, y2024: 6, y2025: 9, total: 51, pct: 2.1, subject: "Mathematics" },
+      { topic: "Introduction to 3D Geometry", y2016: 6, y2017: 3, y2018: 6, y2019: 3, y2020: 3, y2021: 3, y2022: 6, y2023: 6, y2024: 3, y2025: 3, total: 42, pct: 1.7, subject: "Mathematics" },
+      { topic: "Relations and Functions", y2016: 3, y2017: 6, y2018: 3, y2019: 6, y2020: 0, y2021: 3, y2022: 6, y2023: 6, y2024: 6, y2025: 3, total: 42, pct: 1.7, subject: "Mathematics" },
+      { topic: "Differential Equations", y2016: 3, y2017: 6, y2018: 3, y2019: 3, y2020: 0, y2021: 3, y2022: 3, y2023: 12, y2024: 3, y2025: 3, total: 39, pct: 1.6, subject: "Mathematics" },
+      { topic: "Linear Programming", y2016: 3, y2017: 3, y2018: 3, y2019: 3, y2020: 0, y2021: 3, y2022: 3, y2023: 9, y2024: 9, y2025: 0, total: 36, pct: 1.5, subject: "Mathematics" },
+      { topic: "Binomial Theorem", y2016: 3, y2017: 6, y2018: 3, y2019: 3, y2020: 0, y2021: 0, y2022: 9, y2023: 3, y2024: 3, y2025: 3, total: 33, pct: 1.4, subject: "Mathematics" },
+      { topic: "Matrices", y2016: 3, y2017: 3, y2018: 3, y2019: 3, y2020: 3, y2021: 0, y2022: 6, y2023: 3, y2024: 3, y2025: 3, total: 30, pct: 1.2, subject: "Mathematics" },
+      { topic: "Applications of Integrals", y2016: 3, y2017: 3, y2018: 0, y2019: 3, y2020: 0, y2021: 0, y2022: 3, y2023: 6, y2024: 6, y2025: 3, total: 27, pct: 1.1, subject: "Mathematics" },
+      { topic: "Sets", y2016: 3, y2017: 3, y2018: 3, y2019: 3, y2020: 0, y2021: 0, y2022: 6, y2023: 3, y2024: 3, y2025: 3, total: 27, pct: 1.1, subject: "Mathematics" },
+      { topic: "Limits and Derivatives", y2016: 3, y2017: 3, y2018: 0, y2019: 3, y2020: 0, y2021: 0, y2022: 3, y2023: 3, y2024: 3, y2025: 6, total: 24, pct: 1.0, subject: "Mathematics" },
+      { topic: "Inverse Trigonometric Functions", y2016: 3, y2017: 0, y2018: 3, y2019: 0, y2020: 0, y2021: 0, y2022: 6, y2023: 3, y2024: 3, y2025: 3, total: 21, pct: 0.9, subject: "Mathematics" },
+      { topic: "Statistics", y2016: 0, y2017: 0, y2018: 0, y2019: 0, y2020: 0, y2021: 0, y2022: 3, y2023: 0, y2024: 0, y2025: 3, total: 6, pct: 0.2, subject: "Mathematics" }
     ];
 
     const COLORS = [
@@ -566,6 +570,8 @@
           case "2020-desc":  return b.y2020 - a.y2020;
           case "2019-desc":  return b.y2019 - a.y2019;
           case "2018-desc":  return b.y2018 - a.y2018;
+          case "2017-desc":  return b.y2017 - a.y2017;
+          case "2016-desc":  return b.y2016 - a.y2016;
           case "name-asc":   return a.topic.localeCompare(b.topic);
           case "name-desc":  return b.topic.localeCompare(a.topic);
           case "group-astro": {
@@ -582,13 +588,15 @@
         }
       });
 
-      const maxTotal = 192;
+      const maxTotal = 249;
       document.getElementById("tableBody").innerHTML = data.map(item => {
         const barWidth = Math.min(100, (item.total / maxTotal) * 100);
         return `
           <tr>
             <td>${getBadge(item.subject)}</td>
             <td class="col-topic">${item.topic}</td>
+            <td class="col-num">${item.y2016}</td>
+            <td class="col-num">${item.y2017}</td>
             <td class="col-num">${item.y2018}</td>
             <td class="col-num">${item.y2019}</td>
             <td class="col-num">${item.y2020}</td>
@@ -659,7 +667,7 @@
       renderTable();
     });
 
-    // ─── GRAPH LOGIC (8 YEARS) ───
+    // ─── GRAPH LOGIC (10 YEARS) ───
     function initChart() {
       const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
       const textColor = isDark ? "#8b949e" : "#64748b";
@@ -669,7 +677,7 @@
       chartInstance = new Chart(ctx, {
         type: "line",
         data: { 
-          labels: ["2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"], 
+          labels: ["2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"], 
           datasets: [] 
         },
         options: {
@@ -714,7 +722,7 @@
 
         datasets.push({
           label: item.topic,
-          data: [item.y2018, item.y2019, item.y2020, item.y2021, item.y2022, item.y2023, item.y2024, item.y2025],
+          data: [item.y2016, item.y2017, item.y2018, item.y2019, item.y2020, item.y2021, item.y2022, item.y2023, item.y2024, item.y2025],
           borderColor: color,
           backgroundColor: color,
           borderWidth: 2.5,
